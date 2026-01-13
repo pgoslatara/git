@@ -2,6 +2,7 @@
 #define ENVIRONMENT_H
 
 #include "repo-settings.h"
+#include "branch.h"
 
 /* Double-check local_repo_env below if you add to this list. */
 #define GIT_DIR_ENVIRONMENT "GIT_DIR"
@@ -89,6 +90,9 @@ struct repo_config_values {
 	/* core config values */
 	char *attributes_file_path;
 	int sparse_checkout;
+
+	/* branch config values */
+	enum branch_track git_branch_track;
 };
 
 /*
@@ -113,6 +117,8 @@ const char *strip_namespace(const char *namespaced_ref);
 
 int git_default_config(const char *, const char *,
 		       const struct config_context *, void *);
+
+void repo_config_values_init(struct repo_config_values *cfg);
 
 /*
  * TODO: All the below state either explicitly or implicitly relies on
