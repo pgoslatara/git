@@ -12,7 +12,7 @@ test_expect_success 'setup' '
 	test_commit 3 a/b/file
 '
 
-test_expect_success 'cannot run last-modified on two trees' '
+test_expect_success 'cannot run last-modified on two revision' '
 	test_must_fail git last-modified HEAD HEAD~1
 '
 
