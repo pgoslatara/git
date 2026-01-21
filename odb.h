@@ -317,6 +317,7 @@ struct object_info {
 	off_t *disk_sizep;
 	struct object_id *delta_base_oid;
 	void **contentp;
+	time_t *mtimep;
 
 	/* Response */
 	enum {
