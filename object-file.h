@@ -47,7 +47,8 @@ void odb_source_loose_reprepare(struct odb_source *source);
 
 int odb_source_loose_read_object_info(struct odb_source *source,
 				      const struct object_id *oid,
-				      struct object_info *oi, int flags);
+				      struct object_info *oi,
+				      unsigned flags);
 
 int odb_source_loose_read_object_stream(struct odb_read_stream **out,
 					struct odb_source *source,
@@ -126,16 +127,16 @@ int for_each_loose_file_in_source(struct odb_source *source,
 				  void *data);
 
 /*
- * Iterate over all accessible loose objects without respect to
- * reachability. By default, this includes both local and alternate objects.
- * The order in which objects are visited is unspecified.
- *
- * Any flags specific to packs are ignored.
+ * Iterate through all loose objects in the given object database source and
+ * invoke the callback function for each of them. If given, the object info
+ * will be populated with the object's data as if you had called
+ * `odb_source_loose_read_object_info()` on the object.
  */
-int for_each_loose_object(struct object_database *odb,
-			  each_loose_object_fn, void *,
-			  enum for_each_object_flags flags);
-
+int odb_source_loose_for_each_object(struct odb_source *source,
+				     struct object_info *oi,
+				     odb_for_each_object_cb cb,
+				     void *cb_data,
+				     unsigned flags);
 
 /**
  * format_object_header() is a thin wrapper around s xsnprintf() that

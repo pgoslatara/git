@@ -339,9 +339,21 @@ typedef int each_packed_object_fn(const struct object_id *oid,
 				  void *data);
 int for_each_object_in_pack(struct packed_git *p,
 			    each_packed_object_fn, void *data,
-			    enum for_each_object_flags flags);
-int for_each_packed_object(struct repository *repo, each_packed_object_fn cb,
-			   void *data, enum for_each_object_flags flags);
+			    unsigned flags);
+
+/*
+ * Iterate through all packed objects in the given packfile store and invoke
+ * the callback function for each of them. If given, the object info will be
+ * populated with the object's data as if you had called
+ * `packfile_store_read_object_info()` on the object.
+ *
+ * The flags parameter is a combination of `odb_for_each_object_flags`.
+ */
+int packfile_store_for_each_object(struct packfile_store *store,
+				   struct object_info *oi,
+				   odb_for_each_object_cb cb,
+				   void *cb_data,
+				   unsigned flags);
 
 /* A hook to report invalid files in pack directory */
 #define PACKDIR_FILE_PACK 1
