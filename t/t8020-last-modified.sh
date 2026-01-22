@@ -8,11 +8,12 @@ test_expect_success 'setup' '
 	test_commit 1 file &&
 	mkdir a &&
 	test_commit 2 a/file &&
+	git tag -mA t2 2 &&
 	mkdir a/b &&
 	test_commit 3 a/b/file
 '
 
-test_expect_success 'cannot run last-modified on two trees' '
+test_expect_success 'cannot run last-modified on two revision' '
 	test_must_fail git last-modified HEAD HEAD~1
 '
 
@@ -51,6 +52,13 @@ test_expect_success 'last-modified recursive' '
 	check_last_modified -r <<-\EOF
 	3 a/b/file
 	2 a/file
+	1 file
+	EOF
+'
+
+test_expect_success 'last-modified on annotated tag' '
+	check_last_modified t2 <<-\EOF
+	2 a
 	1 file
 	EOF
 '
@@ -233,6 +241,11 @@ test_expect_success 'last-modified merge undoes changes' '
 test_expect_success 'last-modified complains about unknown arguments' '
 	test_must_fail git last-modified --foo 2>err &&
 	grep "unknown last-modified argument: --foo" err
+'
+
+test_expect_success 'last-modified expects commit-ish' '
+	test_must_fail git last-modified HEAD^{tree} 2>err &&
+	grep "revision argument is not a commit-ish" err
 '
 
 test_done
